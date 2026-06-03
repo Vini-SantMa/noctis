@@ -2,15 +2,15 @@ from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Float, Text
 from sqlalchemy.orm import relationship, validates
 from abc import ABC, abstractmethod
 from .database import Base
+import requests
 
 
 
 
-class IExportavel(ABC): #interface  para as classes user, usergame e lista
-    @abstractmethod
+class IExportavel: #interface  para as classes user, usergame e lista
     def exportar_dados(self):
         """Método que toda classe que assinar este contrato deve ter"""
-        pass
+        raise NotImplementedError("A classe precisa implementar o exportar_dados()")
 
 def processar_exportacao(entidade: IExportavel):
     return entidade.exportar_dados()
@@ -44,6 +44,30 @@ class IPlataformaFactory(ABC):
     @abstractmethod
     def criar_buscador_status(self) -> IPlayerStatusBuscador:
         pass
+    
+
+#Modelo da Steam,
+class SteamGameBuscador(IGameDataBuscador):
+    #Buscar os dados dentro da steam
+    def buscar_detalhes_jogo(self, game_id: str):
+        #Espaço para implementar a api da steam
+
+        return{
+             "plataforma": "steam", "titulo": f"Jogo Steam {game_id}", "capa": "https://cdn.akamai.steamstatic.com/sample.jpg"}
+        
+class SteamStatusBuscador(IPlayerStatusBuscador):
+    # Implementacao para buscar os status dos jogadores la na steam
+    def buscar_status_jogador(self, player_id: str):
+        #Requisicao para api da steam
+        return { "horas_jogadas": 120.5, "conquistas": "45/90"}
+
+class SteamFactory(IPlataformaFactory):
+    def criar_buscador_jogos(self) -> IGameDataBuscador:
+        return SteamGameBuscador()
+    def criar_buscador_status(self) -> IPlayerStatusBuscador:
+        
+        return SteamStatusBuscador()
+
 # ==========================================
 # MODELOS DO BANCO DE DADOS
 # ==========================================

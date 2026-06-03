@@ -57,6 +57,17 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         
     return user
 
+# Testse para um selecionador das platafomras
+
+def get_plataforma_factory(plataforma: str):
+    # retornar a fabrica correta, com base na string
+   
+    fabricas = { "steam": models.SteamFactory(), 
+                 #"riot": models.RiotFactory(),
+    }
+    return fabricas.get(plataforma.lower())
+
+
 @app.get("/")
 def root():
     return {"status": "online", "message": "Banco de dados e servidor online!"}
@@ -236,6 +247,26 @@ def reset_password(reset_data: schemas.PasswordReset, db: Session = Depends(get_
 # ROTAS DA BIBLIOTECA (UserGame)
 # ==========================================
 # Possibilidade do bastract factory
+
+@app.post("/importar/{plataforma}")
+def importar_jogo_externo(
+    plataforma: str, game_id_externo: str,
+    player_id_externo: str, db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+): 
+    fabrica = get_plataforma_factory(plataforma)
+    if not fabrica: raise HTTPException(status_code = 400, details = f"Plataforma ainda não suportada")
+    
+    buscador_jogo = fabrica.criar_buscador_jogos()
+    buscador_status = fabrica.criar_buscador_status()
+    
+    dados_do_jogo = buscador_jogo.buscar_detalhes_jogo()
+    estatisticas = buscador_status.buscar_status_jogador()
+     #Logica para salvar no banco de dados
+     
+    return { "mensagem": f"Importacao de {plataforma.capitalize()} concluida",
+           "dados_jogo": dados_do_jogo, "estatisticas_jogador": estatisticas }
+    
 @app.post("/biblioteca", response_model=schemas.UserGameResponse)
 def adicionar_ou_atualizar_jogo(
     game_data: schemas.UserGameCreate, 
