@@ -253,16 +253,19 @@ def importar_jogo_externo(
     plataforma: str, game_id_externo: str,
     player_id_externo: str, db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user)
-): 
+): # Solicita a fabrica certa (qual plataforma está trabalhando)
     fabrica = get_plataforma_factory(plataforma)
-    if not fabrica: raise HTTPException(status_code = 400, details = f"Plataforma ainda não suportada")
-    
+    if not fabrica:
+        raise HTTPException(status_code = 400, details = f"Plataforma ainda não suportada")
+    # criação das ferramentas de busca
     buscador_jogo = fabrica.criar_buscador_jogos()
     buscador_status = fabrica.criar_buscador_status()
     
-    dados_do_jogo = buscador_jogo.buscar_detalhes_jogo()
-    estatisticas = buscador_status.buscar_status_jogador()
-     #Logica para salvar no banco de dados
+    # execucao das buscas, conforme os contratos ja definidos
+    dados_do_jogo = buscador_jogo.buscar_detalhes_jogo(game_id_externo)
+    estatisticas = buscador_status.buscar_status_jogador(player_id_externo) #adicao do argumento na funcao de busca de detalhes e status
+    
+     #Logica para salvar no banco de dados (ADICIONAAAAR)
      
     return { "mensagem": f"Importacao de {plataforma.capitalize()} concluida",
            "dados_jogo": dados_do_jogo, "estatisticas_jogador": estatisticas }

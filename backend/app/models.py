@@ -29,11 +29,11 @@ class IPlayerStatusBuscador(ABC):
     """Contrato para buscar as estatisticas do jogador na APi ecterna"""
 
     @abstractmethod
-    def buscar_stats(self, player_id: str):
+    def buscar_status_jogador(self, player_id: str):
         pass
 
 #
-# ABSTRACT FACTORY
+# ABSTRACT FACTORYco
 #
 
 class IPlataformaFactory(ABC):
@@ -46,20 +46,76 @@ class IPlataformaFactory(ABC):
         pass
     
 
-#Modelo da Steam,
+#Modelo da Steam
+
+# IMPLEMENTACAO DA WEBAPI PARA TESTAR STEAM
+
 class SteamGameBuscador(IGameDataBuscador):
     #Buscar os dados dentro da steam
     def buscar_detalhes_jogo(self, game_id: str):
         #Espaço para implementar a api da steam
+        game_id_str = str(game_id)
+        url = f"https://store.steampowered.com/api/appdetails?appids={game_id_str}"
+        try:
+            resposta = requests.get(url).json()
+            
+            # Verifica se a Steam retornou sucesso
+            if resposta and resposta.get(game_id_str, {}).get("success"):
+                dados = resposta[game_id_str]["data"]
+                return {
+                    "plataforma": "Steam",
+                    "titulo": dados.get("name"),
+                    "capa": dados.get("header_image", "Sem capa"),
+                    "desenvolvedora": dados.get("developers", ["Desconhecida"])[0]
+                }
+                
+            # O RAIO-X: Se falhar, devolvemos a resposta oficial da Steam no Swagger!
+            return {"erro": f"Falha na Steam. Resposta oficial: {resposta}"}
+            
+        except Exception as e:
+            return {"erro": f"Erro de conexão com a Valve: {str(e)}"}
+        
+    """ game_id_str = str(game_id)
+        url = f"https://store.steampowered.com/api/appdetails?appids={game_id}"
+        resposta = requests.get(url).json()
+        
+        #Identificar sucesso na requisicao da api
+        if resposta.get(game_id, {}).get("sucess"):
+            dados = resposta[game_id]["data"]
+            return{
+                "plataforma": "Steam",
+                "titulo": dados.get("name"),
+                "capa": dados.get("header_image"),
+                "desenvolvedora": dados.get("developers", ["Desconhecida"])[0]
+                
+            }
+        return{ "erro": "jogo não encontrado"}"""
 
-        return{
-             "plataforma": "steam", "titulo": f"Jogo Steam {game_id}", "capa": "https://cdn.akamai.steamstatic.com/sample.jpg"}
+      #  return{
+           #  "plataforma": "steam", "titulo": f"Jogo Steam {game_id}", "capa": "https://cdn.akamai.steamstatic.com/sample.jpg"}
         
 class SteamStatusBuscador(IPlayerStatusBuscador):
     # Implementacao para buscar os status dos jogadores la na steam
     def buscar_status_jogador(self, player_id: str):
         #Requisicao para api da steam
-        return { "horas_jogadas": 120.5, "conquistas": "45/90"}
+        STEAM_API = "50A713B67631D0979739B7F996B831B6"
+       #return { "horas_jogadas": 120.5, "conquistas": "45/90"}
+        url = f"http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={STEAM_API}&steamid={player_id}&format=json"
+       
+        try:
+           resposta = requests.get(url).json()
+           jogos = resposta.get("response",{}).get("games", [])
+           total_jogos = len(jogos)
+           horas_totais = sum(jogo.get("playtime_forever", 0) for jogo in jogos) / 60
+           
+           return {
+               "total_jogos_na_conta": total_jogos,
+               "horas_totais_jogadas": round(horas_totais, 1)
+           }
+        except Exception:
+            return {
+                "erro": "falha na busca das informacoes da conta. Perfil privado ou Id invalido"
+            }
 
 class SteamFactory(IPlataformaFactory):
     def criar_buscador_jogos(self) -> IGameDataBuscador:
@@ -67,6 +123,10 @@ class SteamFactory(IPlataformaFactory):
     def criar_buscador_status(self) -> IPlayerStatusBuscador:
         
         return SteamStatusBuscador()
+
+# ---------- Padrão ADAPTER ------------------
+
+        
 
 # ==========================================
 # MODELOS DO BANCO DE DADOS
