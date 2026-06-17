@@ -93,47 +93,7 @@ class SteamGameBuscador(IGameDataBuscador):
             
         except Exception as e:
             return {"erro": f"Erro de conexão com a Valve: {str(e)}"}
-    """
-    def buscar_detalhes_jogo(self, game_id: str):
-        #Espaço para implementar a api da steam
-        game_id_str = str(game_id)
-        url = f"https://store.steampowered.com/api/appdetails?appids={game_id_str}"
-        try:
-            resposta = requests.get(url).json()
-            
-            # Verifica se a Steam retornou sucesso
-            if resposta and resposta.get(game_id_str, {}).get("success"):
-                dados = resposta[game_id_str]["data"]
-                return {
-                    "plataforma": "Steam",
-                    "titulo": dados.get("name"),
-                    "capa": dados.get("header_image", "Sem capa"),
-                    "desenvolvedora": dados.get("developers", ["Desconhecida"])[0]
-                }
-                
-            # O RAIO-X: Se falhar, devolvemos a resposta oficial da Steam no Swagger!
-            return {"erro": f"Falha na Steam. Resposta oficial: {resposta}"}
-            
-        except Exception as e:
-            return {"erro": f"Erro de conexão com a Valve: {str(e)}"}"""
-            
-            
-        
-    """ game_id_str = str(game_id)
-        url = f"https://store.steampowered.com/api/appdetails?appids={game_id}"
-        resposta = requests.get(url).json()
-        
-        #Identificar sucesso na requisicao da api
-        if resposta.get(game_id, {}).get("sucess"):
-            dados = resposta[game_id]["data"]
-            return{
-                "plataforma": "Steam",
-                "titulo": dados.get("name"),
-                "capa": dados.get("header_image"),
-                "desenvolvedora": dados.get("developers", ["Desconhecida"])[0]
-                
-            }
-        return{ "erro": "jogo não encontrado"}"""
+    
 
       #  return{
            #  "plataforma": "steam", "titulo": f"Jogo Steam {game_id}", "capa": "https://cdn.akamai.steamstatic.com/sample.jpg"}
@@ -167,21 +127,7 @@ class SteamStatusBuscador(IPlayerStatusBuscador):
            }
         except Exception:
             return {"erro": "falha na busca das informacoes da conta"}
-        """
-        try:
-           resposta = requests.get(url).json()
-           jogos = resposta.get("response",{}).get("games", [])
-           total_jogos = len(jogos)
-           horas_totais = sum(jogo.get("playtime_forever", 0) for jogo in jogos) / 60
-           
-           return {
-               "total_jogos_na_conta": total_jogos,
-               "horas_totais_jogadas": round(horas_totais, 1)
-           }
-        except Exception:
-            return {
-                "erro": "falha na busca das informacoes da conta. Perfil privado ou Id invalido"
-            }"""
+       
 
 class SteamFactory(IPlataformaFactory):
     def criar_buscador_jogos(self) -> IGameDataBuscador:
@@ -265,41 +211,7 @@ class SteamAdapter:
             "status_principal": status_calculado, 
             "favorito": False
         }
-        """"
-        texto_conquistas = "0/0"
-        url_conquistas = f"https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v0001/?appid={game_id}&key={self.api_key}&steamid={player_id}"
-        
-        try:
-            resposta_achievements = requests.get(url_conquistas).json()
-            player_stats = resposta_achievements.get("playerstats", {})
-            
-            if player_stats.get("success"):
-                lista_conquistas = player_stats.get("achievements", [])
-                total = len(lista_conquistas)
-                completas = sum(1 for c in lista_conquistas if c.get("achieved") == 1)
-                texto_conquistas = f"{completas}/{total}"
-            else:
-                erro_msg = player_stats.get("error", "Bloqueado por Privacidade")
-                texto_conquistas = f"Erro Steam: {erro_msg}"
-        except Exception as e:
-            texto_conquistas = f"Erro Interno: {str(e)}"
-            # Se o perfil for privado ou o jogo não tiver conquistas
-            pass
-
-        # > retorno dos dados já de forma organizada, para encaixar no banco
-        return {
-            "game_id": str(game_id),
-            "titulo": dados_base.get("titulo", "Jogo Desconhecido"),
-            "capa": dados_base.get("capa", ""),
-            "horas_jogadas": dados_status.get("horas_totais_jogadas", 0.0),
-            "conquistas": texto_conquistas,
-            "status_principal": "Quero Jogar", # Status padrão
-            "favorito": False
-        } """
-        
-#-----
-
-
+       
 
 # ==========================================
 # MODELOS DO BANCO DE DADOS
