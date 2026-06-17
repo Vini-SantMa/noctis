@@ -41,7 +41,7 @@ export function useAppState() {
 
     if (token) {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/users/me", {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/users/me`, {
           method: "GET",
           headers: { "Authorization": `Bearer ${token}` }
         });
@@ -71,7 +71,7 @@ export function useAppState() {
 
     if (token) {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/biblioteca", {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/biblioteca`, {
           headers: { "Authorization": `Bearer ${token}` }
         });
 
@@ -126,7 +126,7 @@ export function useAppState() {
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/listas", {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/listas`, {
           headers: { "Authorization": `Bearer ${token}` }
         });
 
@@ -191,7 +191,7 @@ export function useAppState() {
     if (!token) return false;
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/users/me", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/users/me`, {
         method: "PUT",
         headers: { 
           "Authorization": `Bearer ${token}`, 
@@ -247,7 +247,7 @@ export function useAppState() {
     }));
 
    if (token) {
-      await fetch(`${import.meta.env.VITE_API_URL}/biblioteca", {
+      await fetch(`${import.meta.env.VITE_API_URL}/biblioteca`, {
         method: "POST",
         headers: { 
           "Authorization": `Bearer ${token}`, 
@@ -278,7 +278,7 @@ export function useAppState() {
     }));
 
     if (token) {
-      await fetch(`${import.meta.env.VITE_API_URL}/biblioteca", {
+      await fetch(`${import.meta.env.VITE_API_URL}/biblioteca`, {
         method: "POST",
         headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -296,7 +296,7 @@ export function useAppState() {
 
     if (token) {
       try {
-        await fetch(`http://localhost:8000/biblioteca/${gameId}`, {
+        await fetch(`${import.meta.env.VITE_API_URL}/biblioteca/${gameId}`, {
           method: "DELETE",
           headers: { "Authorization": `Bearer ${token}` }
         });
@@ -325,7 +325,7 @@ export function useAppState() {
 
     if (token) {
       try {
-        await fetch(`${import.meta.env.VITE_API_URL}/biblioteca", {
+        await fetch(`${import.meta.env.VITE_API_URL}/biblioteca`, {
           method: "POST",
           headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -356,7 +356,7 @@ export function useAppState() {
 
     if (token) {
       try {
-        await fetch(`${import.meta.env.VITE_API_URL}/biblioteca", {
+        await fetch(`${import.meta.env.VITE_API_URL}/biblioteca`, {
           method: "POST",
           headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -383,7 +383,7 @@ export function useAppState() {
     const currentGame = state.library[gameId] || {};
 
     try {
-      await fetch(`${import.meta.env.VITE_API_URL}/biblioteca", {
+      await fetch(`${import.meta.env.VITE_API_URL}/biblioteca`, {
         method: "POST",
         headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -454,7 +454,7 @@ export function useAppState() {
     if (!token) return;
 
     try {
-      await fetch(`${import.meta.env.VITE_API_URL}/listas", {
+      await fetch(`${import.meta.env.VITE_API_URL}/listas`, {
         method: "POST",
         headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -489,7 +489,7 @@ export function useAppState() {
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        await fetch(`http://localhost:8000/listas/${listId}`, {
+        await fetch(`${import.meta.env.VITE_API_URL}/listas/${listId}`, {
           method: "DELETE",
           headers: { "Authorization": `Bearer ${token}` }
         });
