@@ -76,7 +76,23 @@ Segue documentação em arquivo PDF dos detalhes do projeto: Descrição, Stack 
 
 #### https://drive.google.com/file/d/1XPNl6B6HocJony--JJRfUWtVZGWZIxq4/view?usp=drive_link
 ---
+## 🏗️ Padrões de Projeto (Design Patterns)
 
+Para garantir a escalabilidade, manutenção e um código limpo, o NOCTIS aplica princípios sólidos de engenharia de software, incluindo a implementação dos seguintes Padrões de Projeto:
+
+### 1. Abstract Factory
+* **Justificativa:** O projeto necessita criar famílias de objetos relacionados — como diferentes tipos de componentes visuais (cards de jogos, modais, itens de lista) e diferentes categorias de conquistas — sem acoplar o código a classes concretas específicas.
+* **Implementação:** Aplicado na geração e renderização dinâmica dos elementos da interface gráfica e na estrutura de conquistas personalizadas. Através de fábricas de componentes, o frontend consegue instanciar diferentes visuais e comportamentos para os jogos com base em seus atributos, e até origem de importação dos dados, abstraindo a lógica de criação e permitindo que novos tipos de elementos sejam adicionados facilmente no futuro sem alterar a base existente. Esse padrão permite que, no futuro, o projeto tenha integração com diferentes fontes de dados: Steam, Epic, Riot, Xboxlive, PSN, etc..
+
+### 2. Adapter
+* **Justificativa:** O NOCTIS depende fortemente de uma API externa (RAWG Video Games Database). O formato dos dados brutos devolvidos por essa API difere do modelo de dados interno gerido pelo backend (FastAPI/SQLite) e esperado pelo frontend.
+* **Implementação:** O padrão Adapter atua na camada de serviço do sistema como um tradutor. Ele recebe a carga de dados JSON da RAWG API e adapta (converte) essas informações para o contrato estrutural nativo do NOCTIS. Isso blinda a aplicação: se a RAWG alterar sua estrutura de resposta, apenas a classe Adapter precisará ser modificada, mantendo o resto do sistema intocável.
+
+### 3. State
+* **Justificativa:** A regra de negócios central do NOCTIS é baseada na transição de status dos jogos na biblioteca do usuário (`Quero Jogar`, `Jogando`, `Jogado`, `Abandonado` ou `Platinado`). O comportamento e as ações permitidas na interface dependem inteiramente deste estado atual.
+* **Implementação:** O padrão State é utilizado para gerenciar o ciclo de vida do jogo na biblioteca do usuário. Em vez de usar extensas cadeias de `if/else` para definir regras condicionais (por exemplo, habilitar a função de dar nota apenas se o jogo estiver "Jogado" ou "Platinado"), a lógica de negócio é delegada aos respectivos estados. Cada status define o comportamento e as transições possíveis, tornando o código mais coeso e extensível.
+
+---
 ## 🚀 Como Executar o Projeto
 
 ### Pré-requisitos
