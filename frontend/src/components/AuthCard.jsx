@@ -61,7 +61,7 @@ export default function AuthCard() {
     formData.append('password', loginPassword);
 
     try {
-      const resposta = await fetch('http://127.0.0.1:8000/login', {
+      const resposta = await fetch(import.meta.env.VITE_API_URL + '/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: formData
@@ -88,7 +88,7 @@ export default function AuthCard() {
     setLoading(true);
 
     try {
-      const resposta = await fetch('http://127.0.0.1:8000/register', {
+      const resposta = await fetch(import.meta.env.VITE_API_URL + '/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: signupName, email: signupEmail, password: signupPassword })
@@ -115,7 +115,7 @@ export default function AuthCard() {
     setLoading(true);
 
     try {
-      const res = await fetch('http://127.0.0.1:8000/password-recovery/request', {
+      const res = await fetch(import.meta.env.VITE_API_URL + '/password-recovery/request', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: forgotEmail })
@@ -140,7 +140,7 @@ export default function AuthCard() {
     setLoading(true);
 
     try {
-      const res = await fetch('http://127.0.0.1:8000/password-recovery/reset', {
+      const res = await fetch(import.meta.env.VITE_API_URL + '/password-recovery/reset', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: forgotEmail, code: resetCode, new_password: newPassword })
