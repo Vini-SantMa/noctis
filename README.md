@@ -76,6 +76,11 @@ Segue documentação em arquivo PDF dos detalhes do projeto: Descrição, Stack 
 
 #### https://drive.google.com/file/d/1XPNl6B6HocJony--JJRfUWtVZGWZIxq4/view?usp=drive_link
 ---
+## Relatório de uso
+Segue documento compilando as opniões e primeiras impressões de 10 usuários:
+#### https://docs.google.com/document/d/1XU4W0CjBvPnSaUrnZ---PAdFUeSdMGtoeNl03wZAnds/edit?usp=sharing
+
+---
 ## 🏗️ Padrões de Projeto (Design Patterns)
 
 Para garantir a escalabilidade, manutenção e um código limpo, o NOCTIS aplica princípios sólidos de engenharia de software, incluindo a implementação dos seguintes Padrões de Projeto:
